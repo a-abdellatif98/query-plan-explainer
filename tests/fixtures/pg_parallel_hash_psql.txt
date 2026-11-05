@@ -1,0 +1,75 @@
+                     QUERY PLAN
+-----------------------------------------------------
+ [                                                  +
+   {                                                +
+     "Plan": {                                      +
+       "Node Type": "Gather",                       +
+       "Parallel Aware": false,                     +
+       "Plan Rows": 1000,                           +
+       "Actual Total Time": 900.000,                +
+       "Actual Rows": 1000,                         +
+       "Actual Loops": 1,                           +
+       "Workers Planned": 2,                        +
+       "Workers Launched": 2,                       +
+       "Plans": [                                   +
+         {                                          +
+           "Node Type": "Hash Join",                +
+           "Parent Relationship": "Outer",          +
+           "Parallel Aware": false,                 +
+           "Join Type": "Inner",                    +
+           "Plan Rows": 333,                        +
+           "Actual Total Time": 850.000,            +
+           "Actual Rows": 333,                      +
+           "Actual Loops": 3,                       +
+           "Hash Cond": "(e.user_id = u.id)",       +
+           "Plans": [                               +
+             {                                      +
+               "Node Type": "Seq Scan",             +
+               "Parent Relationship": "Outer",      +
+               "Parallel Aware": true,              +
+               "Relation Name": "events",           +
+               "Alias": "e",                        +
+               "Plan Rows": 1000000,                +
+               "Actual Total Time": 300.000,        +
+               "Actual Rows": 1000000,              +
+               "Actual Loops": 3                    +
+             },                                     +
+             {                                      +
+               "Node Type": "Hash",                 +
+               "Parent Relationship": "Inner",      +
+               "Parallel Aware": false,             +
+               "Plan Rows": 50000,                  +
+               "Actual Total Time": 200.000,        +
+               "Actual Rows": 50000,                +
+               "Actual Loops": 3,                   +
+               "Hash Buckets": 65536,               +
+               "Original Hash Buckets": 65536,      +
+               "Hash Batches": 8,                   +
+               "Original Hash Batches": 1,          +
+               "Peak Memory Usage": 4097,           +
+               "Plans": [                           +
+                 {                                  +
+                   "Node Type": "Seq Scan",         +
+                   "Parent Relationship": "Outer",  +
+                   "Parallel Aware": false,         +
+                   "Relation Name": "users",        +
+                   "Alias": "u",                    +
+                   "Plan Rows": 50000,              +
+                   "Actual Total Time": 90.000,     +
+                   "Actual Rows": 50000,            +
+                   "Actual Loops": 3                +
+                 }                                  +
+               ]                                    +
+             }                                      +
+           ]                                        +
+         }                                          +
+       ]                                            +
+     },                                             +
+     "Planning Time": 0.300,                        +
+     "Triggers": [                                  +
+     ],                                             +
+     "Execution Time": 905.000                      +
+   }                                                +
+ ]
+(1 row)
+

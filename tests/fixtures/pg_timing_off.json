@@ -1,0 +1,18 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Seq Scan",
+      "Parallel Aware": false,
+      "Relation Name": "sessions",
+      "Alias": "sessions",
+      "Plan Rows": 10,
+      "Actual Rows": 5000,
+      "Actual Loops": 1,
+      "Filter": "(lower(email) = 'a@example.com'::text)",
+      "Rows Removed by Filter": 995000
+    },
+    "Planning Time": 0.100,
+    "Triggers": [],
+    "Execution Time": 120.000
+  }
+]

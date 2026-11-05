@@ -1,0 +1,27 @@
+{
+  "name": "query-plan-explainer",
+  "description": "Explains PostgreSQL and MySQL EXPLAIN / EXPLAIN ANALYZE output: finds the bottleneck node, says why it is slow (seq scans, bad row estimates, nested loop explosions, disk sorts, filesort and temporary tables, indexes defeated by functions, casts or leading wildcards) and gives a concrete fix with a way to verify it",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ahmed",
+    "email": "ahmed.abdelatife@gmail.com"
+  },
+  "homepage": "https://github.com/a-abdellatif98/query-plan-explainer",
+  "repository": "https://github.com/a-abdellatif98/query-plan-explainer",
+  "license": "MIT",
+  "keywords": [
+    "database",
+    "django",
+    "explain",
+    "explain-analyze",
+    "indexing",
+    "laravel",
+    "mysql",
+    "performance",
+    "postgresql",
+    "prisma",
+    "query-plan",
+    "rails"
+  ],
+  "icon": "assets/icon.svg"
+}
