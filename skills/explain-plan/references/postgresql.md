@@ -15,7 +15,7 @@ EXPLAIN (ANALYZE, BUFFERS, SETTINGS) SELECT ...;      -- also shows non-default 
 - `TIMING OFF` keeps row counts but drops per-node times (lower overhead). Then you can judge estimates but not where time went.
 - `GENERIC_PLAN` (16+) explains a query with `$1` placeholders; it cannot be combined with `ANALYZE`.
 - Prepared statements can switch to a generic plan after five executions; if the app is slow but a hand-typed EXPLAIN is fast, the app may be using a generic plan or different parameter values.
-- In psql, `\x off` and `\pset format unaligned` (or `psql -XqAt -c "EXPLAIN (...) ..."`) avoid the `+` line wrapping. The script also strips psql decoration.
+- In psql, `\pset format unaligned` (or `psql -XqAt -c "EXPLAIN (...) ..."`) avoid the `+` line wrapping. The script also strips psql decoration.
 
 ## Reading a node line
 

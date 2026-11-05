@@ -33,7 +33,7 @@ Applies: `LIKE '%term'`, `ILIKE '%term%'`. A B-tree can only seek on a fixed pre
 
 ## Type and collation mismatch
 
-Applies: MySQL comparing a string column to a number (`WHERE phone = 5551234` converts every row), joins between columns with different charsets or collations (for example `utf8mb3` against `utf8mb4`), PostgreSQL `varchar` column against a `numeric` or differently typed parameter producing a cast on the column side (look for `::` in `Filter`).
+Applies: MySQL comparing a string column to a number (`WHERE phone = 5551234` converts every row), joins between columns with different charsets or collations (for example `utf8mb3` against `utf8mb4`), PostgreSQL integer column compared with a `numeric` or `double precision` value, which can put a cast on the column side (look for `::` in `Filter`).
 
 Fix the literal or parameter type first (`'5551234'`). For schema mismatch, align the column types: `ALTER TABLE t MODIFY col VARCHAR(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;` (a rebuild, plan it). Verify `key` is set and `ref` shows a column or `const`, not `func`.
 
@@ -78,7 +78,7 @@ Verify: `Sort Method: quicksort  Memory`, `Batches: 1`, no temp blocks written.
 
 Applies: PG `Sort` under `Limit`; MySQL `Using filesort` with a small LIMIT.
 
-Put equality filter columns first, then the sort column, in one index: `WHERE tenant_id = ? ORDER BY created_at DESC LIMIT 20` needs `(tenant_id, created_at)`. The index can be scanned backwards for DESC (PostgreSQL always, MySQL 8.0 also supports true descending columns). Mixed directions (`a ASC, b DESC`) need the index declared that way on both engines.
+Put equality filter columns first, then the sort column, in one index: `WHERE tenant_id = ? ORDER BY created_at DESC LIMIT 20` needs `(tenant_id, created_at)`. The index can be scanned backwards for DESC (both engines can scan an index backwards; MySQL 8.0 added true descending index columns). Mixed directions (`a ASC, b DESC`) need the index declared that way on both engines.
 
 For deep pages replace `OFFSET` with keyset pagination: `WHERE (created_at, id) < (?, ?) ORDER BY created_at DESC, id DESC LIMIT 20` (row-value comparison in MySQL has weaker index use on older versions, so verify with EXPLAIN).
 
@@ -119,6 +119,7 @@ add_index :orders, :customer_id, algorithm: :inplace        # MySQL online DDL
 Django:
 ```python
 from django.contrib.postgres.operations import AddIndexConcurrently
+from django.db import migrations, models
 from django.db.models.functions import Lower
 
 class Migration(migrations.Migration):

@@ -13,8 +13,8 @@ SHOW WARNINGS;                           -- after EXPLAIN: the rewritten query t
 ```
 
 - `EXPLAIN ANALYZE` executes the statement. Use a non-production copy for anything that writes (it also executes multi-table UPDATE and DELETE).
-- `EXPLAIN ANALYZE` output is always the tree format.
-- From 8.3, the `explain_json_format_version` system variable can select a newer JSON layout built from iterators. If the JSON has nested objects with an `inputs` list instead of `query_block`, treat it like the tree format.
+- `EXPLAIN ANALYZE` prints the tree format.
+- From 8.3, the `explain_json_format_version` system variable can select a newer JSON layout built from iterators. If the JSON has nested objects with an `inputs` list instead of `query_block`, check whether `actual` keys are present before relying on it.
 
 ## Traditional columns
 

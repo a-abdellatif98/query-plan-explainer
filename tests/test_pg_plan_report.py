@@ -139,3 +139,8 @@ def test_cli_error_exit_code(tmp_path, capsys):
     bad.write_text("Seq Scan on t")
     assert report_module.main([str(bad)]) == 2
     assert "FORMAT JSON" in capsys.readouterr().err
+
+
+def test_cli_missing_file_exit_code(tmp_path, capsys):
+    assert report_module.main([str(tmp_path / "missing.json")]) == 2
+    assert "error:" in capsys.readouterr().err

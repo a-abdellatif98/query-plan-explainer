@@ -194,10 +194,10 @@ def main(argv=None):
     parser.add_argument("--min-factor", type=float, default=MIN_MISS_FACTOR)
     parser.add_argument("--json", action="store_true", help="emit machine-readable JSON")
     args = parser.parse_args(argv)
-    text = open(args.path, encoding="utf-8").read() if args.path else sys.stdin.read()
     try:
+        text = open(args.path, encoding="utf-8").read() if args.path else sys.stdin.read()
         report = analyze(load_plan(text), args.top, args.min_factor)
-    except PlanError as error:
+    except (PlanError, OSError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
     print(json.dumps(report, indent=2) if args.json else render(report))

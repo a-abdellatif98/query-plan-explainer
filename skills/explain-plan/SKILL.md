@@ -16,7 +16,7 @@ Turn a pasted plan into: the bottleneck node, why it is slow, the concrete fix, 
 | `[{"Plan": {"Node Type": ...}}]` | PostgreSQL JSON | Only if `"Actual Total Time"` / `"Actual Rows"` keys exist |
 | Table with `id, select_type, table, type, possible_keys, key, key_len, ref, rows, filtered, Extra` | MySQL traditional | No, estimates only |
 | `{"query_block": {"select_id": 1, ...}}` | MySQL FORMAT=JSON (version 1) | No |
-| Nested JSON objects with child iterators under `"inputs"` | MySQL FORMAT=JSON with `explain_json_format_version=2` (8.3+) | Only for EXPLAIN ANALYZE |
+| Nested JSON objects with child iterators under `"inputs"` | MySQL FORMAT=JSON with `explain_json_format_version=2` (8.3+) | Only if `actual` keys are present |
 | `-> Filter: ... (cost=... rows=...) (actual time=a..b rows=N loops=L)` | MySQL EXPLAIN ANALYZE (tree) | Yes |
 | `-> Table scan on t (cost=... rows=...)` with no `actual` | MySQL FORMAT=TREE | No |
 
@@ -36,9 +36,9 @@ PostgreSQL ANALYZE:
 4. Compare `rows` (estimate) with `actual rows` at every node. A miss of 10x or more is worth explaining; the first (deepest) node where it appears is usually the root cause, because errors multiply upward through joins. Ignore overestimates under a `Limit` (the node stopped early on purpose).
 5. Then look at the bottleneck node for the specific signals in the table below.
 
-If you can run Python and the plan is PostgreSQL JSON with ANALYZE, `scripts/pg_plan_report.py` (in the plugin root) computes exclusive times, the top 3 nodes and the worst estimate misses deterministically: `python3 scripts/pg_plan_report.py plan.json` (`--json` for machine output, `--top N`, `--min-factor F`). Otherwise do the arithmetic by hand and show it.
+If you can run Python and the plan is PostgreSQL JSON with ANALYZE, `scripts/pg_plan_report.py` (in the plugin root) computes exclusive times, the top 3 nodes and the worst estimate misses deterministically: `python3 scripts/pg_plan_report.py plan.json` (run from the plugin directory; `--json` for machine output, `--top N`, `--min-factor F`). Otherwise do the arithmetic by hand and show it.
 
-MySQL traditional / JSON (estimates only): read rows top to bottom in join order. The product of `rows x filtered / 100` across the join gives the estimated work. Look for `type` = `ALL` or `index` on large tables, `key` = NULL, `Using filesort`, `Using temporary`, `Using join buffer`.
+MySQL traditional / JSON (estimates only): read rows top to bottom in join order. The product of `rows` down the join order gives the estimated rows examined. Look for `type` = `ALL` or `index` on large tables, `key` = NULL, `Using filesort`, `Using temporary`, `Using join buffer`.
 
 MySQL EXPLAIN ANALYZE: same rules as PostgreSQL. `actual time=a..b` is in milliseconds, first row..all rows, averaged per loop and inclusive of children. Multiply by `loops`.
 

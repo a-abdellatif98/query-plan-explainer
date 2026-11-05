@@ -45,11 +45,12 @@ The `explain-plan` skill activates when you paste a plan or ask why a query is s
 For a PostgreSQL plan captured with `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)`:
 
 ```
+# run from the plugin directory
 python3 scripts/pg_plan_report.py plan.json
 python3 scripts/pg_plan_report.py plan.json --json --top 5 --min-factor 20
 ```
 
-Prints the slowest nodes by exclusive time, the worst row estimate misses and warnings such as disk spills. It handles parallel plans, `Limit` and `TIMING OFF`, and accepts psql-wrapped output. It does not parse MySQL plans or PostgreSQL text plans.
+Prints the slowest nodes by exclusive time, the worst row estimate misses and warnings such as disk spills. It handles parallel plans, `Limit` and `TIMING OFF`, and accepts psql-wrapped output. It does not parse MySQL plans or PostgreSQL text plans, treats only `Limit` as an early-stop parent for estimate misses, and ignores `Triggers` and JIT time, so check those in the raw plan when the node times do not add up to the execution time.
 
 ## Safety
 
