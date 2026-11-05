@@ -1,5 +1,5 @@
 ---
-description: Explain a pasted EXPLAIN or EXPLAIN ANALYZE plan (PostgreSQL or MySQL): bottleneck, cause, concrete fix and how to verify it
+description: "Explain a pasted EXPLAIN or EXPLAIN ANALYZE plan (PostgreSQL or MySQL): bottleneck, cause, concrete fix and how to verify it"
 argument-hint: [path to plan file, or paste the plan]
 allowed-tools: [Read, Glob, Grep]
 ---
