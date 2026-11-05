@@ -197,7 +197,7 @@ def main(argv=None):
     try:
         text = open(args.path, encoding="utf-8").read() if args.path else sys.stdin.read()
         report = analyze(load_plan(text), args.top, args.min_factor)
-    except (PlanError, OSError) as error:
+    except (PlanError, OSError, UnicodeDecodeError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
     print(json.dumps(report, indent=2) if args.json else render(report))
